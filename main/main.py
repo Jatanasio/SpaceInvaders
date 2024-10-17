@@ -11,6 +11,9 @@ WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Invaders Knockoff")
 
+print_message = pygame.USEREVENT + 0
+pygame.time.set_timer(print_message, 2000)
+
 # Colors
 BLACK = (0, 0, 0)
 
@@ -38,13 +41,15 @@ while running:
     clock.tick(60)  # Set frame rate to 60 FPS
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:  # Shoot bullet
                 bullet = Bullet(player.rect.centerx, player.rect.top)
                 all_sprites.add(bullet)
                 bullets.add(bullet)
-
+        if event.type == print_message: # this will run at the same time as the bullet event, i should add a time for how long you last
+            print("Hello World")        
+   
     # Update sprites
     all_sprites.update()
 
@@ -54,7 +59,9 @@ while running:
     # Check for win condition
     if len(enemies) == 0:
         print("You win!")
-        running = False
+        pygame.quit()
+
+    
 
     # Draw everything
     screen.fill(BLACK)
