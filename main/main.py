@@ -7,17 +7,25 @@ from level import Level
 # Initialize Pygame
 pygame.init()
 
+
+#Initialize music
+pygame.mixer.init()
+
 # Screen dimensions
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Space Invaders Knockoff")
-
 
 pygame.font.init()
 font = pygame.font.Font(None, 36)
 
 # Colors
 BLACK = (0, 0, 0)
+ 
+# Music
+pygame.mixer.music.load('assets/assets/Music for a Space Inavders-like minigame v1.wav') 
+pygame.mixer.music.play(-1)
+pygame.mixer.music.set_volume(0.5)
 
 # Create sprite groups
 all_sprites = pygame.sprite.Group()
@@ -59,6 +67,7 @@ while running:
                 bullet = Bullet(player.rect.centerx, player.rect.top)
                 all_sprites.add(bullet)
                 bullets.add(bullet)
+                
         
     current_level = level.get_current_level()
 
@@ -67,10 +76,13 @@ while running:
 
     # Check for collisions between bullets and enemies
     hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
+    
+
     collisions = pygame.sprite.spritecollide(player, enemies, False)
+    
    
     if len(enemies) == 0:  # If all enemies are gone
-        if current_level < 5:  # Move to the next level
+        if current_level < 3:  # Move to the next level
             level.next_level()
             spawn_enemies(all_sprites, enemies)
         else: 
@@ -101,5 +113,6 @@ while running:
     all_sprites.draw(screen)
     pygame.display.flip()
 
+pygame.mixer.music.stop()
 pygame.quit()
   
