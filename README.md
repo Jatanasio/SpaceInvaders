@@ -4,11 +4,11 @@ The game is a Space Invaders knockoff where players control a spaceship to shoot
 
 During this project, I was striving to improve my ability to code with classes, using an object-oriented style of programming.
 
-Software Demo Video(https://youtu.be/U4qWAHMDcX4)
+Software Demo Video: (https://youtu.be/U4qWAHMDcX4)
 
 # Development Environment
 
-To develop this program i utilized:
+To develop this program I utilized:
 
 -VSCode
 -Python
