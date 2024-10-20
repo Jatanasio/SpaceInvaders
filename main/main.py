@@ -7,10 +7,6 @@ from level import Level
 # Initialize Pygame
 pygame.init()
 
-
-#Initialize music
-pygame.mixer.init()
-
 # Screen dimensions
 WIDTH, HEIGHT = 800, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -21,11 +17,6 @@ font = pygame.font.Font(None, 36)
 
 # Colors
 BLACK = (0, 0, 0)
- 
-# Music
-pygame.mixer.music.load('assets/assets/Music for a Space Inavders-like minigame v1.wav') 
-pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.5)
 
 # Create sprite groups
 all_sprites = pygame.sprite.Group()
@@ -37,16 +28,19 @@ player = Player()
 all_sprites.add(player)
 
 # Initialize Timer
-
 level = Level()
 
-# Create enemies in a grid
-def spawn_enemies(all_sprites, enemies):
+# Create enemies in a grid with increased difficulty
+def spawn_enemies(all_sprites, enemies, current_level):
     # Clear previous enemies
     enemies.empty()
 
-    for i in range(8):
-        for j in range(5):
+    # Determine the number of enemies based on the current level
+    num_rows = 5 + current_level  # Increase the number of rows as the level increases
+    num_cols = 8  # Keep the number of columns constant or increase if desired
+
+    for i in range(num_cols):
+        for j in range(num_rows):
             # Positioning enemies (modify based on level if desired)
             enemy = Enemy(50 + i * 80, 50 + j * 50)
             all_sprites.add(enemy)
@@ -57,7 +51,6 @@ running = True
 clock = pygame.time.Clock()
 
 while running:
-
     clock.tick(60)  # Set frame rate to 60 FPS
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -67,8 +60,7 @@ while running:
                 bullet = Bullet(player.rect.centerx, player.rect.top)
                 all_sprites.add(bullet)
                 bullets.add(bullet)
-                
-        
+
     current_level = level.get_current_level()
 
     # Update sprites
@@ -76,16 +68,14 @@ while running:
 
     # Check for collisions between bullets and enemies
     hits = pygame.sprite.groupcollide(enemies, bullets, True, True)
-    
 
     collisions = pygame.sprite.spritecollide(player, enemies, False)
-    
-   
+
     if len(enemies) == 0:  # If all enemies are gone
         if current_level < 3:  # Move to the next level
             level.next_level()
-            spawn_enemies(all_sprites, enemies)
-        else: 
+            spawn_enemies(all_sprites, enemies, current_level)  # Pass current_level for enemy spawn
+        else:
             screen.fill(BLACK)
             win_text = font.render("You win!", True, (255, 255, 255))
             screen.blit(win_text, (screen.get_width() // 2 - win_text.get_width() // 2, screen.get_height() // 2 - win_text.get_height() // 2))
@@ -103,7 +93,7 @@ while running:
 
         # Wait for a few seconds before quitting
         pygame.time.delay(2000)  # Wait 2 seconds
-        running = False 
+        running = False
 
     # Draw everything
     screen.fill(BLACK)
@@ -113,6 +103,4 @@ while running:
     all_sprites.draw(screen)
     pygame.display.flip()
 
-pygame.mixer.music.stop()
 pygame.quit()
-  
